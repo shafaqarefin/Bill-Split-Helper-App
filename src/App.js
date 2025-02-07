@@ -84,7 +84,7 @@ function Friend({ friend, select, handleSelect }) {
     <li>
       <img src={friend.image} alt={friend.name} />
       <h3>{friend.name}</h3>
-      <p>You owe him/her this</p>
+      <FriendDebtStatus friend={friend} />
       <button
         className="button"
         onClick={() => {
@@ -95,6 +95,24 @@ function Friend({ friend, select, handleSelect }) {
       </button>
     </li>
   );
+}
+
+function FriendDebtStatus({ friend }) {
+  let status = "";
+  let style = "";
+
+  if (friend.balance < 0) {
+    status = `You owe ${friend.name} ${Math.abs(friend.balance)}€`;
+    style = "red";
+  } else if (friend.balance > 0) {
+    status = `${friend.name} owes you ${Math.abs(friend.balance)}€`;
+    style = "green";
+  } else {
+    status = `You and ${friend.name} are even`;
+    style = ""; // No style needed for even balance
+  }
+
+  return <p className={style}>{status}</p>;
 }
 
 function FormAddFriend({ updateList, list, setAddFriend }) {
