@@ -38,6 +38,10 @@ export default function App() {
   }
   console.log(list);
 
+  // function updateBalance(id,new){
+  //   list.map((curr)=>curr.id===id?{})
+  // }
+
   return (
     <div className="app">
       <div className="sidebar">
@@ -131,18 +135,46 @@ function FormAddFriend({ updateList, list, setAddFriend }) {
 }
 
 function FormSplitBill({ curr }) {
+  const [bill, setBill] = useState("");
+  const [myBill, setMyBill] = useState(0);
+  const [otherBill, setOtherBill] = useState(0);
+
+  function handleBilSubmit(e) {
+    e.preventDefault();
+  }
+  function handleBillSplit(total) {
+    setBill(total);
+    setOtherBill(total);
+  }
+
+  function handleMyShare(share) {
+    if (share <= bill) {
+      setMyBill(share);
+      setOtherBill(bill - share);
+    } else {
+      return;
+    }
+  }
   return (
-    <form className="form-split-bill ">
+    <form className="form-split-bill " onSubmit={(e) => handleBilSubmit(e)}>
       <label>💰 Bill value</label>
-      <input type="text" />
+      <input
+        value={bill}
+        type="text"
+        onChange={(e) => handleBillSplit(Number(e.target.value))}
+      />
       <label>🧍‍♀️ Your expense</label>
-      <input type="text" />
+      <input
+        type="text"
+        value={myBill}
+        onChange={(e) => handleMyShare(Number(e.target.value))}
+      />
       <label>👫 {curr.name}'s expense</label>
-      <input type="text" value={34} />
+      <input type="text" value={otherBill} disabled />
       <label>🤑 Who is paying the bill</label>
       <select>
-        <option>You</option>
-        <option>{curr.name}</option>
+        <option value="You">You</option>
+        <option value={curr.name}>{curr.name}</option>
       </select>
       <button className="button">Split Bill</button>
     </form>
